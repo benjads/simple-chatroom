@@ -40,3 +40,4 @@ simple_chatroom_client
 
 # CMake
 cmake-build-debug
+CPM.cmake

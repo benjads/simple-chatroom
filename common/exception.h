@@ -8,7 +8,7 @@ private:
     const char *cause;
 
 public:
-    explicit MalformedPacketException(const char *cause) : cause(cause) {}
+    explicit MalformedPacketException(const char *cause) : cause{cause} {}
     const char *what() {
         return cause;
     }

@@ -4,25 +4,43 @@
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
+//using seconds_t = std::chrono::seconds;
 
 enum opcode {
-    CONNECT = 0x01,
-    WELCOME = 0x02,
+    WELCOME = 0x01,
+    JOIN = 0x02,
+    ONBOARD = 0x03
 };
 
-template <typename T>
 class JsonSerializable {
     virtual std::string serialize() = 0;
 };
 
-class GatewayPacket : public JsonSerializable<GatewayPacket> {
+class GatewayPacket : public JsonSerializable {
 public:
-    GatewayPacket(opcode op, std::string payload);
-    GatewayPacket(std::string raw);
+    GatewayPacket(opcode op, json rawPayload);
+
+    explicit GatewayPacket(const std::string& raw);
+
     std::string serialize() override;
+
 private:
     opcode op;
-    std::string payload;
+    json payload;
+};
+
+class Message : public JsonSerializable {
+public:
+    Message(std::string sender, time_t timestamp, std::string body);
+
+    explicit Message(const std::string& raw);
+
+    std::string serialize() override;
+
+private:
+    std::string sender;
+    time_t timestamp;
+    std::string body;
 };
 
 #endif //SIMPLE_CHATROOM_PAYLOAD_H

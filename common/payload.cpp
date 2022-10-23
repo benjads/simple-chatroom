@@ -3,19 +3,18 @@
 #include <utility>
 #include "exception.h"
 
-GatewayPacket::GatewayPacket(opcode op, std::string payload) : op(op), payload(std::move(payload)) {}
+// class: GatewayPacket
 
-GatewayPacket::GatewayPacket(std::string raw) {
+GatewayPacket::GatewayPacket(opcode op, json payload) : op{op}, payload{std::move(payload)} {}
+
+GatewayPacket::GatewayPacket(const std::string &raw) {
     try {
         auto j = json::parse(raw);
-        op = j["op"];
+        this->op = j["op"];
 
         // TODO
-        switch (op) {
-            case CONNECT:
-                break;
-            case WELCOME:
-                break;
+        switch (this->op) {
+
         }
 
     } catch (json::parse_error &e) {
@@ -25,10 +24,37 @@ GatewayPacket::GatewayPacket(std::string raw) {
 
 std::string GatewayPacket::serialize() {
     json j = {
-            {"op", op},
-            {"d",  data}
+            {"op", this->op},
+            {"d",  this->payload}
     };
 
-    return j;
+    return j.dump();
 }
 
+// class: Message
+
+Message::Message(std::string sender, time_t timestamp, std::string body) : sender{std::move(sender)},
+                                                                           timestamp{timestamp},
+                                                                           body{std::move(body)} {}
+
+Message::Message(const std::string &raw) {
+    try {
+        auto j = json::parse(raw);
+
+        this->sender = j["sender"];
+        this->timestamp = j["timestamp"];
+        this->body = j["body"];
+    } catch (json::parse_error &e) {
+        throw MalformedPacketException(e.what());
+    }
+}
+
+std::string Message::serialize() {
+    json j = {
+            {"sender", this->sender},
+            {"timestamp", this->timestamp},
+            {"body", this->body}
+    };
+
+    return j.dump();
+}

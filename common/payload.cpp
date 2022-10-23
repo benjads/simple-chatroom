@@ -31,6 +31,14 @@ std::string GatewayPacket::serialize() {
     return j.dump();
 }
 
+opcode GatewayPacket::getOp() const {
+    return op;
+}
+
+const json &GatewayPacket::getPayload() const {
+    return payload;
+}
+
 // class: Message
 
 Message::Message(std::string sender, time_t timestamp, std::string body) : sender{std::move(sender)},

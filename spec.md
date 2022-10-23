@@ -13,7 +13,7 @@
 | timestamp | integer | Message sent epoch seconds  |
 | body      | string  | Message body (100 char max) |
 
-## Gateway Packets
+## Gateway Methods
 
 ### WELCOME
 

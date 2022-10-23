@@ -24,6 +24,10 @@ public:
 
     std::string serialize() override;
 
+    opcode getOp() const;
+
+    const json &getPayload() const;
+
 private:
     opcode op;
     json payload;

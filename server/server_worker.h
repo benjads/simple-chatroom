@@ -15,13 +15,18 @@ public:
     ~ServerWorker();
 
     void execute();
+
 private:
     int connfd = FD_EMPTY;
-    std::string nick;
+    std::string client_nick;
 
-    void check_recv();
+    bool check_recv();
 
-    void send_packet(GatewayPacket packet);
+    bool send_packet(GatewayPacket packet) const;
+
+    void handle_client_packet(const GatewayPacket &packet);
+
+    void method_join(const GatewayPacket &packet);
 };
 
 #endif //SIMPLE_CHATROOM_SERVER_WORKER_H

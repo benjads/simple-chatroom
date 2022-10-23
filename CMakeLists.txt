@@ -3,8 +3,8 @@ project(simple_chatroom)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(simple_chatroom_server server/server.cpp server/server_worker.cpp server/server_worker.h common/GatewayPacket.cpp common/GatewayPacket.h)
-add_executable(simple_chatroom_client client/client.cpp common/GatewayPacket.cpp common/GatewayPacket.h)
+add_executable(simple_chatroom_server server/server.cpp server/server_worker.cpp server/server_worker.h common/payload.cpp common/payload.h common/exception.h)
+add_executable(simple_chatroom_client client/client.cpp common/payload.cpp common/payload.h common/exception.h)
 
 include(CPM.cmake)
 CPMAddPackage("gh:nlohmann/json@3.11.2")

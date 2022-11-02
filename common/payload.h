@@ -9,7 +9,10 @@ using json = nlohmann::json;
 enum opcode {
     WELCOME = 0x01,
     JOIN = 0x02,
-    ONBOARD = 0x03
+    ONBOARD = 0x03,
+    SEND_MSG = 0x04,
+    SEND_MSG_ACK = 0x05,
+    NEW_MSGS = 0x06
 };
 
 class JsonSerializable {
@@ -39,7 +42,17 @@ public:
 
     explicit Message(const std::string& raw);
 
+    bool operator==(const Message &rhs) const;
+
+    bool operator!=(const Message &rhs) const;
+
     std::string serialize() override;
+
+    const std::string &getSender() const;
+
+    time_t getTimestamp() const;
+
+    const std::string &getBody() const;
 
 private:
     std::string sender;

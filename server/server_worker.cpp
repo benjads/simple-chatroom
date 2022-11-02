@@ -9,7 +9,7 @@
 
 using json = nlohmann::json;
 
-ServerWorker::ServerWorker(int connfd) : connfd{connfd} {}
+ServerWorker::ServerWorker(int connfd, MessageContainer msg_cont) : connfd{connfd}, msg_cont{msg_cont} {};
 
 ServerWorker::~ServerWorker() = default;
 
@@ -17,8 +17,8 @@ void ServerWorker::execute() {
     printf("Client connected, FD: %d\n", connfd);
 
     // Send welcome packet
-    const GatewayPacket welcomePacket(WELCOME, nullptr);
-    if (!send_packet(welcomePacket)) {
+    const GatewayPacket welcome_packet(WELCOME, nullptr);
+    if (!send_packet(welcome_packet)) {
         // Failed, return
         return;
     }
@@ -73,6 +73,28 @@ bool ServerWorker::check_recv() {
             }
 
             return true;
+    }
+}
+
+void ServerWorker::check_msgs() {
+    msg_cont->mutex.lock();
+
+    // Check for no messages on server or client is up-to-date
+    if (msg_cont->messages.empty() || msg_cont->messages.end() == last_msg) {
+        return;
+    }
+
+    std::list<Message> missing(last_msg, msg_cont->messages.end());
+
+    msg_cont->mutex.unlock();
+
+    json j = {
+            {"msgs", missing}
+    };
+    const GatewayPacket new_msgs_packet(NEW_MSGS, j);
+    if (!send_packet(welcomePacket)) {
+        // Failed, return
+        return;
     }
 }
 

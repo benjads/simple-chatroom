@@ -66,3 +66,23 @@ std::string Message::serialize() {
 
     return j.dump();
 }
+
+const std::string &Message::getSender() const {
+    return sender;
+}
+
+time_t Message::getTimestamp() const {
+    return timestamp;
+}
+
+const std::string &Message::getBody() const {
+    return body;
+}
+
+bool Message::operator==(const Message &rhs) const {
+    return timestamp == rhs.timestamp;
+}
+
+bool Message::operator!=(const Message &rhs) const {
+    return !(rhs == *this);
+}

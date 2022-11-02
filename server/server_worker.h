@@ -4,13 +4,19 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <list>
 #include "../common/payload.h"
 
 #define FD_EMPTY (-100)
 
+typedef struct {
+    std::list<Message> messages;
+    std::mutex mutex;
+} *MessageContainer;
+
 class ServerWorker {
 public:
-    explicit ServerWorker(int connfd);
+    ServerWorker(int connfd, MessageContainer msg_cont);
 
     ~ServerWorker();
 
@@ -18,9 +24,13 @@ public:
 
 private:
     int connfd = FD_EMPTY;
+    MessageContainer msg_cont;
+    std::list<Message>::iterator last_msg;
     std::string client_nick;
 
     bool check_recv();
+
+    void check_msgs();
 
     bool send_packet(GatewayPacket packet) const;
 

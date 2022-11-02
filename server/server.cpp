@@ -33,6 +33,7 @@ int create_listen_socket(uint16_t port) {
 }
 
 [[noreturn]] void process_clients(int listenfd) {
+    MessageContainer msg_cont;
     std::vector<std::shared_ptr<ServerWorker>> workers;
 
     // Handle incoming clients
@@ -43,7 +44,7 @@ int create_listen_socket(uint16_t port) {
             continue;
         }
 
-        auto worker = std::make_shared<ServerWorker>(connfd);
+        auto worker = std::make_shared<ServerWorker>(connfd, msg_cont);
         std::thread th(&ServerWorker::execute, worker);
         th.join();
 

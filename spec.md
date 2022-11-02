@@ -49,3 +49,33 @@
 | 0    | Successfully connected |
 | -1   | Chatroom full          |
 | -2   | Username unavailable   |
+
+### SEND_MSG
+
+**Origin**: Client
+
+**opcode**: ``0x04``
+
+| Field | Type    | Description |
+|-------|---------|-------------|
+| msg   | MESSAGE | New message |
+
+### SEND_MSG_ACK
+
+**Origin**: Server
+
+**opcode**: ``0x05``
+
+| Field     | Type    | Description          |
+|-----------|---------|----------------------|
+| timestamp | integer | Timestamp of message |
+
+### NEW_MSGS
+
+**Origin**: Server
+
+**opcode**: ``0x06``
+
+| Field | Type                     | Description           |
+|-------|--------------------------|-----------------------|
+| msgs  | array\<MESSAGE\> or null | New chatroom messages |
